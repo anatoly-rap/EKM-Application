@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ar.revaes.LoggedInController">
+   <children>
+      <Button fx:id="logoutButton" layoutX="14.0" layoutY="366.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="99.0" text="Log out" textFill="RED" />
+      <TableView layoutX="318.0" layoutY="14.0" prefHeight="376.0" prefWidth="268.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="encrypted?" />
+          <TableColumn prefWidth="99.0" text="username" />
+            <TableColumn prefWidth="99.0" text="password" />
+        </columns>
+      </TableView>
+      <Label fx:id="welcomeText" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="120.0" />
+   </children>
+</AnchorPane>

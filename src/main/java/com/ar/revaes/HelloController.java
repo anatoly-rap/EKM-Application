@@ -28,5 +28,8 @@ public class HelloController implements Initializable {
         registerButton.setOnAction(event ->
                 AppUtil.switchScene("register.fxml",event,null));
 
+        loginButton.setOnAction(event ->
+                AppUtil.login(emailLogin.getText(),passwordField.getText(),event));
+
     }
 }

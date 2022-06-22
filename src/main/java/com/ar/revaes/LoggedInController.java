@@ -21,7 +21,7 @@ public class LoggedInController implements Initializable {
                 AppUtil.switchScene("hello-view.fxml",event,null));
     }
     public void welcomeUser(String email){
-        String user = email.substring(0,email.indexOf("@")-1);
+        String user = email.substring(0,email.indexOf("@"));
         welcomeText.setText("User: " + user);
     }
 }

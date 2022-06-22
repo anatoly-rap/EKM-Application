@@ -9,15 +9,17 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class AppUtil {  //helper class for changing scene, SQL, onAction/Events
 
-    private static final String DB_URL = "";
-    private static final String DB_USERNAME = "";
-    private static final String DB_PASSWORD = "";
+    private static final String DB_URL = " ";
+    private static final String DB_USERNAME = "root";
+    private static final String DB_PASSWORD = " ";
 
 
-    public static void signUp(String email, String password, ActionEvent e) throws SQLException {
+    public static void signUp(String email, String password, ActionEvent e){
         Connection con = null;
         PreparedStatement psGen = null;
         PreparedStatement psCheck = null;
@@ -25,11 +27,11 @@ public class AppUtil {  //helper class for changing scene, SQL, onAction/Events
 
             try{
                 con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-                psCheck = con.prepareStatement("SELECT * FROM users WHERE username = ?");
+                psCheck = con.prepareStatement("SELECT * FROM app_users WHERE user_email = ?");
                 psCheck.setString(1, email);
                 rs = psCheck.executeQuery();
              if(!rs.next()){        //empty resultSet- email not in table
-                 psGen = con.prepareStatement("INSERT INTO users (?, ?)");
+                 psGen = con.prepareStatement("INSERT INTO app_users (user_email, pass) VALUES (?, ?)");
                  psGen.setString(1,email);
                  psGen.setString(2,password);
                  psGen.executeUpdate(); // eU for INSERT/DELETE, DML(Data Manipulation Lang.)
@@ -66,20 +68,56 @@ public class AppUtil {  //helper class for changing scene, SQL, onAction/Events
                 }
             }
     }
-    public static void login(String email, String password) throws SQLException{
+    public static void login(String email, String password, ActionEvent event){
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
             try{
                 con = DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
-                ps = con.prepareStatement("SELECT password FROM user WHERE username = ?");
+                ps = con.prepareStatement("SELECT pass FROM app_users WHERE user_email = ?");
                 ps.setString(1,email);
-                rs = ps.executeQuery();     //eQ for SELECT statements, returns resultSet
+                rs = ps.executeQuery(); //eQ for SELECT statements, returns resultSet
+                if(!rs.next()){
+                    Alert notFound  = new Alert(Alert.AlertType.ERROR);
+                    notFound.setContentText("existing user email not registered");
+                    notFound.show();
+                }else{
+                    String getPass;
+                    do{
+                        getPass = rs.getString("pass");
+                    }while(rs.next());
+                    if(getPass.equals(password)){
+                        switchScene("LoggedIn.fxml",event,email);
+                    }else{
+                        Alert loginError  = new Alert(Alert.AlertType.ERROR);
+                        loginError.setContentText("Incorrect password entered");
+                        loginError.show();
+                    }
+                }
             }catch(SQLException e){
         e.printStackTrace();
-        }
+        }finally{
+                if(con != null){
+                        try{
+                            con.close();
+                        }catch(SQLException exception){
+                            exception.printStackTrace();
+                        }
+                    }if(ps != null){
+                    try{
+                        ps.close();
+                    }catch(SQLException exception){
+                        exception.printStackTrace();
+                    }
+                }if(rs != null){
+                    try{
+                        rs.close();
+                    }catch(SQLException exception){
+                        exception.printStackTrace();
+                    }
+                }
+            }
     }
-
     public static void switchScene(String FXML,ActionEvent ev, String user){
         Parent rtMain = null;
         if(user != null){

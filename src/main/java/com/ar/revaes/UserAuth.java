@@ -1,17 +1,25 @@
 package com.ar.revaes;
-
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-
 
 public class UserAuth {
 
 public static String saltGen(String username) throws NoSuchAlgorithmException {
-    byte[] toByte = new byte[username.length()];
-    SecureRandom.getInstanceStrong().nextBytes(toByte);
-    return new String(toByte);
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+    byte[] byteArray = username.getBytes();
+    byte[] myvar = "kseil".getBytes(); //additional salt padding
+        try {
+            outputStream.write(myvar);
+        }catch(IOException e){
+        e.printStackTrace();
+        }try{
+            outputStream.write(byteArray);
+        }catch(IOException e){
+        e.printStackTrace();
+    }
+    byte[] salt = outputStream.toByteArray();
+    return new String(salt);
+        }
     }
 
-
-
-}

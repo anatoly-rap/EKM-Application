@@ -24,12 +24,10 @@ public class HelloController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         registerButton.setOnAction(event ->
-                AppUtil.switchScene("register.fxml",event,null));
+                Utilities.switchScene("register.fxml",event,null));
 
         loginButton.setOnAction(event ->
-                AppUtil.login(emailLogin.getText(),passwordField.getText(),event));
-
+                Utilities.login(emailLogin.getText(),passwordField.getText(),event));
     }
 }

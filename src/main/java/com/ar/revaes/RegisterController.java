@@ -1,5 +1,4 @@
 package com.ar.revaes;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -22,8 +21,8 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loginUsers.setOnAction(event ->
-                AppUtil.switchScene("hello-view.fxml",event,null));
+                Utilities.switchScene("hello-view.fxml",event,null));
         regUsers.setOnAction(event ->
-                AppUtil.signUp(newEmail.getText(),newPass.getText(),event));
+                Utilities.signUp(newEmail.getText(),newPass.getText(),event));
     }
 }

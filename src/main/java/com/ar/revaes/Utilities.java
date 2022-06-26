@@ -1,5 +1,4 @@
 package com.ar.revaes;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,19 +11,17 @@ import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class AppUtil {  //helper class for changing scene, SQL, onAction/Events
+public class Utilities extends UserAuth{  //helper class for changing scene, SQL, onAction/Events
 
-    private static final String DB_URL = " ";
-    private static final String DB_USERNAME = "root";
-    private static final String DB_PASSWORD = " ";
-
+    private static final String DB_URL = " "; //your SQL DB link
+    private static final String DB_USERNAME = "root"; //master, root by default
+    private static final String DB_PASSWORD = " "; //master pass
 
     public static void signUp(String email, String password, ActionEvent e){
         Connection con = null;
         PreparedStatement psGen = null;
         PreparedStatement psCheck = null;
         ResultSet rs = null;
-
             try{
                 con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 psCheck = con.prepareStatement("SELECT * FROM app_users WHERE user_email = ?");
@@ -33,7 +30,7 @@ public class AppUtil {  //helper class for changing scene, SQL, onAction/Events
              if(!rs.next()){        //empty resultSet- email not in table
                  psGen = con.prepareStatement("INSERT INTO app_users (user_email, pass) VALUES (?, ?)");
                  psGen.setString(1,email);
-                 psGen.setString(2,password);
+                 psGen.setString(2,hashGen(password));
                  psGen.executeUpdate(); // eU for INSERT/DELETE, DML(Data Manipulation Lang.)
                  switchScene("LoggedIn.fxml", e,email);
              }else{
@@ -82,11 +79,11 @@ public class AppUtil {  //helper class for changing scene, SQL, onAction/Events
                     notFound.setContentText("existing user email not registered");
                     notFound.show();
                 }else{
-                    String getPass;
+                    String getHash;
                     do{
-                        getPass = rs.getString("pass");
+                        getHash = rs.getString("pass"); //hash from DB
                     }while(rs.next());
-                    if(getPass.equals(password)){
+                    if(loginAuth(password,getHash)){
                         switchScene("LoggedIn.fxml",event,email);
                     }else{
                         Alert loginError  = new Alert(Alert.AlertType.ERROR);
@@ -122,7 +119,7 @@ public class AppUtil {  //helper class for changing scene, SQL, onAction/Events
         Parent rtMain = null;
         if(user != null){
             try{
-                FXMLLoader loadIn = new FXMLLoader(AppUtil.class.getResource(FXML));
+                FXMLLoader loadIn = new FXMLLoader(Utilities.class.getResource(FXML));
                 rtMain = loadIn.load();
                 LoggedInController loggedIn = loadIn.getController();
                 loggedIn.welcomeUser(user);
@@ -131,7 +128,7 @@ public class AppUtil {  //helper class for changing scene, SQL, onAction/Events
         }
     }else{
         try{
-            rtMain = FXMLLoader.load(AppUtil.class.getResource(FXML));
+            rtMain = FXMLLoader.load(Utilities.class.getResource(FXML));
         }catch(IOException e){
             e.printStackTrace();
         }

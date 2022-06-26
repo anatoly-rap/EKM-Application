@@ -1,5 +1,4 @@
 package com.ar.revaes;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -16,9 +15,8 @@ public class LoggedInController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         logoutButton.setOnAction(event ->
-                AppUtil.switchScene("hello-view.fxml",event,null));
+                Utilities.switchScene("hello-view.fxml",event,null));
     }
     public void welcomeUser(String email){
         String user = email.substring(0,email.indexOf("@"));

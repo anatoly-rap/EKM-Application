@@ -1,8 +1,3 @@
 package com.ar.revaes;
 
-public class Register {
-
-
-
-
-}
+public class Register {}
